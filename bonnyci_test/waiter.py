@@ -8,7 +8,7 @@ class WaiterTimeOut(Exception):
 
 class BaseWaiter(object):
     def __init__(self, retries=10, interval=1):
-        self.retries = retries
+        self.retries=retries
         self.interval = interval
         self.fail_msg = '%s did not succeed after %s retries at %s sec.' % (
             self.__class__, self.retries, self.interval)
