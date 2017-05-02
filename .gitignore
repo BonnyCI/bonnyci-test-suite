@@ -63,3 +63,4 @@ target/
 .python-version
 
 test_config.conf
+.bonnyci_git/

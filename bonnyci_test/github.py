@@ -8,8 +8,7 @@ LOG = logging.getLogger(__name__)
 
 
 class Github(object):
-    def __init__(self, username, org, reponame, api_token, ssh_key):
-        self.username = username
+    def __init__(self, org, reponame, api_token, ssh_key):
         self.org = org
         self.reponame = reponame
         self.api_token = api_token
@@ -20,8 +19,7 @@ class Github(object):
         self._pull_requests = []
 
     def __str__(self):
-        return ("Github: %s/%s, auth: as %s'" %
-                (self.org, self.reponame, self.username))
+        return ("Github: %s/%s'" % (self.org, self.reponame))
 
     def cleanup(self):
         for pr in self._pull_requests:
@@ -31,7 +29,14 @@ class Github(object):
         LOG.debug('Authenticating to github for %s...', self.org)
         github = github3.GitHub()
         github.login(token=self.api_token)
+        self._username = None
         self._github = github
+
+    @property
+    def username(self):
+        if not self._username:
+            self._username = self._github.me().login
+        return self._username
 
     @property
     def repo(self):
@@ -50,9 +55,6 @@ class Github(object):
         upstream = self._github.repository(org, repo)
         upstream.create_fork()
         self.load()
-
-    def foo(self):
-        return 'bar'
 
     def create_pull_request(self, branch, target_repo, target_branch='master',
                             description=None):

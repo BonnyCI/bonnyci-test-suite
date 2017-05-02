@@ -1,4 +1,5 @@
 
+import errno
 import os
 import uuid
 
@@ -65,7 +66,13 @@ class Editor(object):
         if not path:
             path = os.path.join(self.path, 'test_files', uniq)
         contents = contents or uniq
-        os.makedirs(os.path.dirname(path))
+        try:
+            os.makedirs(os.path.dirname(path))
+        except Exception as e:
+            # directory exists
+            if e.errno == errno.EEXIST:
+                pass
+
         with open(path, 'w') as out:
             out.write(contents)
         rel_path = os.path.relpath(path, self.path)

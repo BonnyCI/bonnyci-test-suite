@@ -46,7 +46,6 @@ class BonnyCITestBase(testtools.TestCase):
         for org in ['upstream', 'downstream']:
             section = 'github_connection_%s' % org
             gh = Github(
-                username=self.config.get(section, 'username'),
                 org=self.config.get(section, 'org'),
                 reponame=self.config.get(section, 'repo'),
                 api_token=self.config.get(section, 'api_token'),

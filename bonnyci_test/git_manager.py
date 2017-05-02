@@ -47,6 +47,9 @@ class GitManager(object):
         else:
             repo = git.Repo(repo_path)
 
+        repo.config_writer().set_value('user', 'email', 'bonny@bonnyci.org')
+        repo.config_writer().set_value('user', 'name', 'BonnyCI')
+
         if github.org not in self.repos:
             self.repos[github.org] = {}
         self.repos[github.org][github.reponame] = repo
@@ -87,9 +90,13 @@ class GitManager(object):
         remote = git.Remote(repo, remote)
         if github.ssh_key:
             ssh_command = 'ssh -i %s' % os.path.expanduser(github.ssh_key)
+            env = {
+                'GIT_SSH_COMMAND': ssh_command,
+                'SSH_AGENT_PID': '',
+                'SSH_AUTH_SOCK': ''}
         else:
-            ssh_command = 'ssh'
-        with remote.repo.git.custom_environment(GIT_SSH_COMMAND=ssh_command):
+            env = {}
+        with remote.repo.git.custom_environment(**env):
             res = remote.push(self._current_branch)[0]
         if res.flags & git.remote.PushInfo.ERROR:
             raise Exception(

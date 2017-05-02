@@ -13,10 +13,9 @@ class BonnyCIPRTests(base.BonnyCITestBase):
         self.downstream = self.checkout_downstream()
         self.create_downstream_branch(self.test_id)
 
-        # XXX move to config
-        self.bot_name = 'bonnyci[bot]'
-        self.check_name = 'check_github'
-        self.gate_name = 'gate_github'
+        self.bot_name = self.config.get('DEFAULT', 'bot_name')
+        self.check_name = self.config.get('DEFAULT', 'check_context')
+        self.gate_name = self.config.get('DEFAULT', 'gate_context')
 
         self.check_status = "%s:%s" % (self.bot_name, self.check_name)
         self.gate_status = "%s:%s" % (self.bot_name, self.gate_name)
