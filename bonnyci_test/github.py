@@ -94,4 +94,3 @@ class Github(object):
         content = self.repo.file_contents(path)
         if content:
             return base64.b64decode(content.content)
-

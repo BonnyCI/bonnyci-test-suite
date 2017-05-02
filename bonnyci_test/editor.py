@@ -1,5 +1,6 @@
 
 import os
+import uuid
 
 RUN_SH_TEMPLATE = """
 #!/bin/bash
