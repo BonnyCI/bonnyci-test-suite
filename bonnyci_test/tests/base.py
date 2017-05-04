@@ -29,10 +29,11 @@ class BonnyCITestBase(testtools.TestCase):
             'Githubs', 'upstream downstream')
 
         test_name = self.id().split('.').pop()
-        git_dir = os.path.join(
-            self.config.get('DEFAULT', 'git_dir'),
-            test_name)
-        self.git = GitManager(self.config.get('DEFAULT', 'git_dir'))
+
+        _git_dir = os.path.expanduser(self.config.get('DEFAULT', 'git_dir'))
+        utils.mkdir(_git_dir)
+        git_dir = os.path.join(_git_dir, test_name)
+        self.git = GitManager(git_dir)
 
         self.connect_githubs()
 

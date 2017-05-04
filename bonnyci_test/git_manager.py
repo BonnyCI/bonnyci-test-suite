@@ -1,23 +1,19 @@
 
+import logging
 import os
 import shutil
 
 import git
 
-import logging
+from bonnyci_test.utils import mkdir
 
 
 LOG = logging.getLogger(__name__)
 
 
-def _mkdir(path):
-    if not os.path.isdir(path):
-        os.mkdir(path)
-
-
 class GitManager(object):
     def __init__(self, git_dir):
-        _mkdir(git_dir)
+        mkdir(git_dir)
         self.git_dir = git_dir
         self.repos = {}
         self._current_branch = 'master'
@@ -38,11 +34,11 @@ class GitManager(object):
                 github.org, github.reponame)
 
         base_path = os.path.join(self.git_dir, github.org)
-        _mkdir(base_path)
+        mkdir(base_path)
 
         repo_path = os.path.join(base_path, github.reponame)
         if not os.path.isdir(repo_path):
-            _mkdir(repo_path)
+            mkdir(repo_path)
             repo = git.Repo.clone_from(remote, repo_path)
         else:
             repo = git.Repo(repo_path)
