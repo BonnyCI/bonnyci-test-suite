@@ -15,4 +15,4 @@
         virtualenv: "{{ venv_path }}"
     - name: Run tests
       shell:
-        cmd: tox -r -e functional
+        cmd: "{{ venv_path }}/bin/tox -r -e functional"
