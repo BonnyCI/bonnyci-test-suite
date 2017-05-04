@@ -1,0 +1,30 @@
+[DEFAULT]
+# A local directory used to store git checkouts
+git_dir = .bonnyci_git
+
+# How long to wait for jobs to run and report status
+pr_status_timeout = 120
+
+# The names of the expected check and gate jobs
+check_job = {{ check_job }}
+gate_job = {{ gate_job }}
+
+# The creator and contexts expected to be reported for each pipeline
+bot_name = {{ bot_name }}
+check_context = {{ check_context }}
+gate_context = {{ gate_context }}
+
+# The upstream's api credentials, organization and repo
+[github_connection_upstream]
+api_token = {{ upstream_api_token }}
+org = {{ upstream_org }}
+repo = {{ upstream_repo }}
+
+# The downstream's api credentials, organization and repo
+# Because we also push code to a fork, a SSH key is required
+# and should be added to the downstream user's github account.
+[github_connection_downstream]
+api_token = {{ downstream_api_token }}
+org = {{ downstream_org }}
+repo = {{ downstream_repo }}
+ssh_key= ~/.ssh/id_rsa

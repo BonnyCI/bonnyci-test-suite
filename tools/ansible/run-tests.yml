@@ -1,0 +1,18 @@
+---
+- name: Write out test config based on secrets
+  hosts: localhost
+  vars:
+    venv_path: "{{ ansible_user_dir }}/.bonnyci_test_venv"
+  tasks:
+    - name: Write out bonnyci_test.conf based on secrets
+      template:
+        src: bonnyci_test.conf
+        dest: "{{ ansible_user_dir }}/.bonnyci_test.conf"
+        owner: "{{ ansible_user_id }}"
+    - name: Install tox venv
+      pip:
+        name: tox
+        virtualenv: "{{ venv_path }}"
+    - name: Run tests
+      shell:
+        cmd: tox -r -e functional

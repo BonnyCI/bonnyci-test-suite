@@ -73,10 +73,14 @@ class GitManager(object):
         self._current_branch = branch
         self._branches = [branch]
 
-    def commit_changes(self, github, changes):
+    def commit_changes(self, github, changes, message=None):
         repo = self.get_repo(github.org, github.reponame)
         repo.index.add([f[0] for f in changes])
         msg = 'Test commit\n\n'
+
+        if message:
+            msg += message + '\n\n'
+
         for k, v in changes:
             msg += ' * %s: %s\n' % (k, v)
         repo.index.commit(msg)

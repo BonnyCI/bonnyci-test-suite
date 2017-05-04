@@ -1,4 +1,5 @@
 
+import os
 import requests
 import uuid
 
@@ -27,6 +28,10 @@ class BonnyCITestBase(testtools.TestCase):
         self.githubs = namedtuple(
             'Githubs', 'upstream downstream')
 
+        test_name = self.id().split('.').pop()
+        git_dir = os.path.join(
+            self.config.get('DEFAULT', 'git_dir'),
+            test_name)
         self.git = GitManager(self.config.get('DEFAULT', 'git_dir'))
 
         self.connect_githubs()
@@ -76,15 +81,16 @@ class BonnyCITestBase(testtools.TestCase):
         self.git.create_branch(self.githubs.downstream, branch=name)
 
     def commit_downstream_changes(self, changes):
-        self.git.commit_changes(self.githubs.downstream, changes)
+        self.git.commit_changes(self.githubs.downstream, changes, self.id())
 
     def push_downstream(self):
         self.git.push(self.githubs.downstream)
 
     def create_pull_request(self, branch, target_repo, target_branch='master',
-                            description=None):
+                            description=''):
+        desc = self.id() + '\n\n' + description
         return self.githubs.downstream.create_pull_request(
-            branch, target_repo, target_branch, description)
+            branch, target_repo, target_branch, desc)
 
     def wait_for_pull_request_status(self, pull_request, status, retries=None):
         retries = retries or self.config.get('DEFAULT', 'pr_status_timeout')
